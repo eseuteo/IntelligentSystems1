@@ -1,18 +1,39 @@
 package fnl;
 
-import robocode.Robot;
-import robocode.ScannedRobotEvent;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
 
-public class FnlBot extends Robot {
+import robocode.Robot;
+
+public class RouteBot extends Robot {
+	ArrayList<Double> arrayDeg = new ArrayList<Double>(); //new ArrayList<Double>({90,90,90,90,90,90,90,90});
+	ArrayList<Double> arrayLen = new ArrayList<Double>();
+	
 	public void run() {
-		turnLeft(getHeading() % 90);
-		turnGunRight(90);
-		while(true) {
-			int randomNum = ThreadLocalRandom.current().nextInt(0, 100);
-			ahead(1000);
-			turnRight(randomNum);
+		routeGen(200.0, 200.0);
+		int max = arrayDeg.size();
+		int i=0;
+		turnLeft(-getHeading());
+		while(i < max) {
+			ahead(arrayLen.get(i));
+			turnRight(arrayDeg.get(i));
+			i++;
 		}
 	}
 	
+	public void routeGen(double goalX, double goalY){
+		double originX = getX();
+		double originY = getY();
+		arrayLen.add(Math.abs(goalX-originX));
+		if (goalX>originX ){
+			arrayDeg.add(90.0);
+		}else{
+			arrayDeg.add(-90.0);
+		}
+		arrayLen.add(Math.abs(goalY-originY));
+		if (goalY>originY ){
+			arrayDeg.add(90.0);
+		}else{
+			arrayDeg.add(-90.0);
+		}
+	}
 }
