@@ -34,7 +34,7 @@ public class BattleRunner {
         BattlefieldSpecification battlefield = new BattlefieldSpecification(640, 640); // 800x600
         RobotSpecification[] selectedRobots = new RobotSpecification[2];
         RobotSetup[] initialSetups= new RobotSetup[2];
-        selectedRobots= engine.getLocalRepository("sample.RouteBot, sample.SittingDuck");
+        selectedRobots= engine.getLocalRepository("fnl.RouteBot*, sample.SittingDuck");
         initialSetups[0]=new RobotSetup(0.0,0.0,0.0);
         initialSetups[1]=new RobotSetup(90.0,200.0,0.0);
         
