@@ -15,7 +15,4 @@ public class FnlBot extends Robot {
 		}
 	}
 	
-	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(5);
-	}
 }
