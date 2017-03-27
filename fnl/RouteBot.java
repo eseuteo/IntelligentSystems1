@@ -1,39 +1,30 @@
 package fnl;
 
-import java.util.ArrayList;
-
 import robocode.Robot;
 
 public class RouteBot extends Robot {
-	ArrayList<Double> arrayDeg = new ArrayList<Double>(); //new ArrayList<Double>({90,90,90,90,90,90,90,90});
-	ArrayList<Double> arrayLen = new ArrayList<Double>();
 	
-	public void run() {
-		routeGen(200.0, 200.0);
-		int max = arrayDeg.size();
-		int i=0;
-		turnLeft(-getHeading());
-		while(i < max) {
-			ahead(arrayLen.get(i));
-			turnRight(arrayDeg.get(i));
-			i++;
+	public void run() {	
+		double ang;
+		while(!(getX()==200.0&&getY()==200.0)){
+			ang=trigonometry(getX(), getY(), 200.0, 200.0)-getHeading();
+			if(ang>180.0){
+				ang=ang-360.0;
+			}
+			else if(ang<-180.0){
+				ang=ang+360.0;
+			}
+			turnRight(ang);
+			ahead(10);
 		}
 	}
 	
-	public void routeGen(double goalX, double goalY){
-		double originX = getX();
-		double originY = getY();
-		arrayLen.add(Math.abs(goalX-originX));
-		if (goalX>originX ){
-			arrayDeg.add(90.0);
-		}else{
-			arrayDeg.add(-90.0);
+	public static double trigonometry(double OrX, double OrY, double DestX, double DestY){
+		double x=DestX-OrX; double y=DestY-OrY;
+		double ang=Math.toDegrees(Math.atan(x/y));
+		if(y<0){
+			ang=ang+180.0;
 		}
-		arrayLen.add(Math.abs(goalY-originY));
-		if (goalY>originY ){
-			arrayDeg.add(90.0);
-		}else{
-			arrayDeg.add(-90.0);
-		}
+		return ang;
 	}
 }
