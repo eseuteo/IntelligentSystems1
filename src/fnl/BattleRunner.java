@@ -1,6 +1,8 @@
 package fnl;
+
 import robocode.control.*;
 import robocode.control.events.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 //
 // Application that demonstrates how to run two sample robots in Robocode using the
@@ -10,70 +12,84 @@ import robocode.control.events.*;
 //
 public class BattleRunner {
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
+		// Disable log messages from Robocode
+		RobocodeEngine.setLogMessagesEnabled(false);
+		// Create the RobocodeEngine
+		// RobocodeEngine engine = new RobocodeEngine(); // Run from current
+		// working directory
+		RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode")); // Run
+																						// from
+																						// C:/Robocode
 
-        // Disable log messages from Robocode
-        RobocodeEngine.setLogMessagesEnabled(false);
+		// Add our own battle listener to the RobocodeEngine
+		engine.addBattleListener(new BattleObserver());
 
-        // Create the RobocodeEngine
-        //   RobocodeEngine engine = new RobocodeEngine(); // Run from current working directory
-        RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode")); // Run from C:/Robocode
+		// Show the Robocode battle view
+		engine.setVisible(true);
 
-        // Add our own battle listener to the RobocodeEngine 
-        engine.addBattleListener(new BattleObserver());
+		// Setup the battle specification
+		long inactivityTime = 10000000;
+		double gunCoolingRate = 1.0;
+		int sentryBorderSize = 50;
+		boolean hideEnemyNames = false;
+		int numRounds = 5;
+		BattlefieldSpecification battlefield = new BattlefieldSpecification(1280, 640); // 800x600
+		RobotSpecification[] selectedRobots = new RobotSpecification[2];
+		RobotSetup[] initialSetups = new RobotSetup[2];
+		RobotSpecification[] modelsRobot = new RobotSpecification[2];
+	
+		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
+		selectedRobots[0] = modelsRobot[0];
+		selectedRobots[1] = modelsRobot[1];
+		initialSetups[0] = new RobotSetup(32.0, 32.0, 0.0);
+		initialSetups[1] = new RobotSetup(416.0, 416.0, 0.0);
+		/*
+		for (int i = 1; i < 21; i++) {
+			selectedRobots[i] = modelsRobot[1];
+			double randX = ThreadLocalRandom.current().nextInt(0, 1200 + 1);
+			double randY = ThreadLocalRandom.current().nextInt(0, 800 + 1);
+			initialSetups[i] = new RobotSetup(randX, randY, 45.0);
+		}*/
 
-        // Show the Robocode battle view
-        engine.setVisible(true);
+		BattleSpecification battleSpec = new BattleSpecification(battlefield, numRounds, inactivityTime, gunCoolingRate,
+				sentryBorderSize, hideEnemyNames, selectedRobots, initialSetups);
 
-        // Setup the battle specification
-        long inactivityTime=10000000; 
-        double gunCoolingRate=1.0;
-        int sentryBorderSize=50;
-        boolean hideEnemyNames=false;
-        int numRounds = 5;
-        BattlefieldSpecification battlefield = new BattlefieldSpecification(640, 640); // 800x600
-        RobotSpecification[] selectedRobots = new RobotSpecification[2];
-        RobotSetup[] initialSetups= new RobotSetup[2];
-        selectedRobots= engine.getLocalRepository("fnl.RouteBot*, sample.SittingDuck");
-        initialSetups[0]=new RobotSetup(0.0,0.0,0.0);
-        initialSetups[1]=new RobotSetup(90.0,200.0,0.0);
-        
-        BattleSpecification battleSpec = new BattleSpecification(battlefield, numRounds, inactivityTime,gunCoolingRate,sentryBorderSize, hideEnemyNames, selectedRobots, initialSetups) ;
+		// Run our specified battle and let it run till it is over
+		engine.runBattle(battleSpec, true); // waits till the battle finishes
 
-        // Run our specified battle and let it run till it is over
-        engine.runBattle(battleSpec, true); // waits till the battle finishes
+		// Cleanup our RobocodeEngine
+		engine.close();
 
-        // Cleanup our RobocodeEngine
-        engine.close();
-
-        // Make sure that the Java VM is shut down properly
-        System.exit(0);
-    }
+		// Make sure that the Java VM is shut down properly
+		System.exit(0);
+	}
 }
 
 //
-// Our private battle listener for handling the battle event we are interested in.
+// Our private battle listener for handling the battle event we are interested
+// in.
 //
 class BattleObserver extends BattleAdaptor {
 
-    // Called when the battle is completed successfully with battle results
-    public void onBattleCompleted(BattleCompletedEvent e) {
-        System.out.println("-- Battle has completed --");
-        
-        // Print out the sorted results with the robot names
-        System.out.println("Battle results:");
-        for (robocode.BattleResults result : e.getSortedResults()) {
-            System.out.println("  " + result.getTeamLeaderName() + ": " + result.getScore());
-        }
-    }
+	// Called when the battle is completed successfully with battle results
+	public void onBattleCompleted(BattleCompletedEvent e) {
+		System.out.println("-- Battle has completed --");
 
-    // Called when the game sends out an information message during the battle
-    public void onBattleMessage(BattleMessageEvent e) {
-        System.out.println("Msg> " + e.getMessage());
-    }
+		// Print out the sorted results with the robot names
+		System.out.println("Battle results:");
+		for (robocode.BattleResults result : e.getSortedResults()) {
+			System.out.println("  " + result.getTeamLeaderName() + ": " + result.getScore());
+		}
+	}
 
-    // Called when the game sends out an error message during the battle
-    public void onBattleError(BattleErrorEvent e) {
-        System.out.println("Err> " + e.getError());
-    }
+	// Called when the game sends out an information message during the battle
+	public void onBattleMessage(BattleMessageEvent e) {
+		System.out.println("Msg> " + e.getMessage());
+	}
+
+	// Called when the game sends out an error message during the battle
+	public void onBattleError(BattleErrorEvent e) {
+		System.out.println("Err> " + e.getError());
+	}
 }
