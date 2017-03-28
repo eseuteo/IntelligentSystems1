@@ -13,8 +13,8 @@ public class RouteBot extends Robot {
 	
 	private class Map{ //esto todavia no hace na
 		private boolean[][] map;
-		public Map(double sizeX, double sizeY){
-			map=new boolean[(int)sizeX/64][(int)sizeY/64];
+		public Map(int sizeX, int sizeY){
+			map=new boolean[sizeX/64][sizeY/64];
 			for(int i=0;i<sizeX;i++){
 				for(int j=0;j<sizeY;j++){
 					map[i][j]=true;
@@ -35,7 +35,7 @@ public class RouteBot extends Robot {
 	
 	public void run() {
 		int i = 0;
-		//Map map=new Map(1200.0,800.0);
+		//Map map=new Map(1280, 640);
 		//la idea es guardar en map qué tiles están ocupadas según se van generando las posiciones aleatorias 
 		//y calcular la ruta antes de empezar a mover el robot
 		route.add(direction.NORTH);
