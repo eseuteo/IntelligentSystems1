@@ -39,14 +39,13 @@ public class BattleRunner {
 		RobotSetup[] initialSetups = new RobotSetup[NUM_ROBOTS];
 		RobotSpecification[] modelsRobot = new RobotSpecification[2];
 		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
-		long seed = System.currentTimeMillis();
-		selectedRobots[0] = modelsRobot[0];
-		initialSetups[0] = new RobotSetup(96.0, 352.0, (double)seed);
+		long seed=System.currentTimeMillis()%360;
+		initialSetups[0] = new RobotSetup(32.0, 32.0, (double)seed);
 		boolean[][] map = new boolean[MAP_SIZE][MAP_SIZE];
-
+		map[0][0]=true;
 
 		Random rand = new Random(seed);
-		for (int i = 1; i < NUM_ROBOTS; i++) {
+		for (int i = 1; i < 31; i++) {
 
 			int x = rand.nextInt();
 			x = Math.abs(x);
@@ -54,7 +53,7 @@ public class BattleRunner {
 			x%=MAP_SIZE;
 			boolean done = false;
 			while (!done) {
-				if(map[x][y]){
+				if(map[x][y]||(x==MAP_SIZE-1&&y==x)){
 					 x = rand.nextInt();
 					 x = Math.abs(x);
 					 y = (x/MAP_SIZE)%MAP_SIZE;
