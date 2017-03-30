@@ -40,15 +40,15 @@ public class Asearch {
 			}
 			open.remove(current);
 			closed.add(current);
-			for (Integer neighbor : neighbor(g, current)) {
+			for (Position neighbor : neighbor(current)) {
 				if (closed.contains(neighbor))
 					continue;
 
-				int tent = dist[current] + g[neighbor][current];
-				if (!open.contains(neighbor) || tent < dist[neighbor]) {
+				int tent = g[current.x][current.y] + 1;
+				if (!open.contains(neighbor) || tent < g[neighbor.x][neighbor.y]) {
 					parent.put(neighbor, current);
-					dist[neighbor] = tent;
-					f[neighbor] = dist[neighbor] + h[neighbor];
+					g[neighbor.x][neighbor.y] = tent;
+					g[neighbor.x][neighbor.y] = tent + heuristic(neighbor);
 					if (!open.contains(neighbor)) {
 						open.add(neighbor);
 					}
