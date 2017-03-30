@@ -1,4 +1,3 @@
-
 import robocode.control.*;
 import robocode.control.events.*;
 
@@ -12,7 +11,6 @@ import java.util.Random;
 //
 public class BattleRunner {
 	static int MAP_SIZE = 13;
-	static int NUM_ROBOTS = 31;
 
 	public static void main(String[] args) {
 		// Disable log messages from Robocode
@@ -20,7 +18,9 @@ public class BattleRunner {
 		// Create the RobocodeEngine
 		// RobocodeEngine engine = new RobocodeEngine(); // Run from current
 		// working directory
-		RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode"));
+		RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode")); // Run
+																						// from
+																						// C:/Robocode
 
 		// Add our own battle listener to the RobocodeEngine
 		engine.addBattleListener(new BattleObserver());
@@ -34,11 +34,12 @@ public class BattleRunner {
 		int sentryBorderSize = 50;
 		boolean hideEnemyNames = false;
 		int numRounds = 5;
-		BattlefieldSpecification battlefield = new BattlefieldSpecification(832, 832); // MapSize
-		RobotSpecification[] selectedRobots = new RobotSpecification[NUM_ROBOTS];
-		RobotSetup[] initialSetups = new RobotSetup[NUM_ROBOTS];
+		BattlefieldSpecification battlefield = new BattlefieldSpecification(832, 832); // 800x600
+		RobotSpecification[] selectedRobots = new RobotSpecification[31];
+		RobotSetup[] initialSetups = new RobotSetup[31];
 		RobotSpecification[] modelsRobot = new RobotSpecification[2];
 		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
+		selectedRobots[0] = modelsRobot[0];
 		long seed=System.currentTimeMillis()%360;
 		initialSetups[0] = new RobotSetup(32.0, 32.0, (double)seed);
 		boolean[][] map = new boolean[MAP_SIZE][MAP_SIZE];
