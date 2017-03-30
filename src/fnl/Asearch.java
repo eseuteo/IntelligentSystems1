@@ -7,7 +7,7 @@ import java.util.HashSet;
 public class Asearch {
 
 	// Every array is accessed as in map[x][y]
-	int maxCells;
+	 int maxCells;
 	boolean[][] map;
 	Position ini;
 	Position end;
@@ -17,7 +17,7 @@ public class Asearch {
 	int[][] f;
 	int[][] g;
 
-	public Asearch(int maxCells, Position ini, Position end, boolean[][] map) {
+	public Asearch(int maxCells,Position ini, Position end, boolean[][] map) {
 		this.maxCells = maxCells;
 		this.ini = ini;
 		this.end = end;
@@ -125,47 +125,5 @@ public class Asearch {
 		return min;
 	}
 
-	protected class Position {
-
-		public int getX() {
-			return x;
-		}
-
-		public void setX(int x) {
-			this.x = x;
-		}
-
-		public int getY() {
-			return y;
-		}
-
-		public void setY(int y) {
-			this.y = y;
-		}
-
-		int x, y;
-
-		public Position(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		@Override
-		public int hashCode() {
-
-			return y * maxCells + x;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj instanceof Position) {
-				Position ob = (Position) obj;
-				if (ob.x == this.x && ob.y == this.y) {
-					return true;
-				} else
-					return false;
-			} else
-				return false;
-		}
-	}
+	
 }
