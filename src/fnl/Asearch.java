@@ -61,14 +61,14 @@ public class Asearch {
 
 	private ArrayList<Position> neighbor(Position current) {
 		ArrayList<Position> list = new ArrayList<>(4);
-		if (map[current.x + 1][current.y + 1] && current.x != maxCells && current.y != maxCells)
-			list.add(new Position(current.x + 1, current.y + 1));
-		if (map[current.x - 1][current.y + 1] && current.x != 0 && current.y != maxCells)
-			list.add(new Position(current.x - 1, current.y + 1));
-		if (map[current.x + 1][current.y - 1] && current.y != 0 && current.x != maxCells)
-			list.add(new Position(current.x + 1, current.y - 1));
-		if (map[current.x - 1][current.y - 1] && current.y != 0 && current.x != 0)
-			list.add(new Position(current.x - 1, current.y - 1));
+		if (map[current.x + 1][current.y ] && current.x != maxCells)
+			list.add(new Position(current.x + 1, current.y));
+		if (map[current.x - 1][current.y] && current.x != 0)
+			list.add(new Position(current.x - 1, current.y));
+		if (map[current.x][current.y - 1] && current.y != 0)
+			list.add(new Position(current.x, current.y - 1));
+		if (map[current.x][current.y - 1] && current.y != 0)
+			list.add(new Position(current.x, current.y - 1));
 
 		return list;
 	}
@@ -78,8 +78,33 @@ public class Asearch {
 	 * @return res = list of directions that should be followed by the robot
 	 */
 	public ArrayList<direction> constructPath(Position current) {
-		ArrayList<direction> res;
-		return null;
+		ArrayList<Position> p = new ArrayList<Position>();
+		ArrayList<direction> res = new ArrayList<>();
+		Position i = this.end;
+		while(g[i.x][i.y]>0){
+			p.add(i);
+			i = parent.get(i);
+		}
+		
+		for (int j = p.size(); j > 0; j--) {
+			int x = p.get(j).x - p.get(j-1).x;
+			int y = p.get(j).y - p.get(j-1).y;
+			if(x==0){
+				if(y==1){
+					res.add(direction.NORTH);
+				}else{
+					res.add(direction.SOUTH);
+				}
+			}else{
+				if(x==1){
+					res.add(direction.EAST);
+				}else{
+					res.add(direction.WEST);
+				}
+			}
+			
+		}
+		return res;
 	}
 
 	public int heuristic(Position actual) {
