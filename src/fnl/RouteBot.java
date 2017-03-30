@@ -25,7 +25,7 @@ public class RouteBot extends Robot {
 		//route=Astar(getX(), getY(), goalX, goalY, map);
 		//la idea es guardar en map qu� baldosas est�n ocupadas seg�n se van generando las posiciones aleatorias
 		//y calcular la ruta antes de empezar a mover el robot
-		Random rand = new Random(seed);
+		Random rand = new Random(getHeading());
 		for (int j = 1; j < 51; j++) {
 
 			int x = rand.nextInt();
