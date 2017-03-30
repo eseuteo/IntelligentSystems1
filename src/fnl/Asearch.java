@@ -53,7 +53,7 @@ public class Asearch {
 				if (!open.contains(neighbor) || tent < g[neighbor.x][neighbor.y]) {
 					parent.put(neighbor, current);
 					g[neighbor.x][neighbor.y] = tent;
-					g[neighbor.x][neighbor.y] = tent + heuristic(neighbor);
+					f[neighbor.x][neighbor.y] = tent + heuristic(neighbor);
 					if (!open.contains(neighbor)) {
 						open.add(neighbor);
 					}
