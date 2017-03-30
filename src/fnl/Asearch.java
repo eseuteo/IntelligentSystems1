@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+
 public class Asearch {
 
 	// Every array is accessed as in map[x][y]
@@ -48,7 +49,6 @@ public class Asearch {
 			for (Position neighbor : neighbor(current)) {
 				if (closed.contains(neighbor))
 					continue;
-
 				int tent = g[current.x][current.y] + 1;
 				if (!open.contains(neighbor) || tent < g[neighbor.x][neighbor.y]) {
 					parent.put(neighbor, current);
@@ -86,6 +86,8 @@ public class Asearch {
 			p.add(i);
 			i = parent.get(i);
 		}
+		p.add(ini);
+		
 		
 		for (int j = p.size()-1; j > 0; j--) {
 			int x = p.get(j).x - p.get(j-1).x;
