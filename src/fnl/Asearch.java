@@ -61,13 +61,13 @@ public class Asearch {
 
 	private ArrayList<Position> neighbor(Position current) {
 		ArrayList<Position> list = new ArrayList<>(4);
-		if (map[current.x + 1][current.y ] && current.x != maxCells)
+		if (current.x != maxCells && !map[current.x + 1][current.y ])
 			list.add(new Position(current.x + 1, current.y));
-		if (map[current.x - 1][current.y] && current.x != 0)
+		if (current.x != 0 && !map[current.x - 1][current.y])
 			list.add(new Position(current.x - 1, current.y));
-		if (map[current.x][current.y - 1] && current.y != 0)
+		if (current.y != 0 && !map[current.x][current.y - 1])
 			list.add(new Position(current.x, current.y - 1));
-		if (map[current.x][current.y - 1] && current.y != 0)
+		if (current.y != 0 && !map[current.x][current.y - 1])
 			list.add(new Position(current.x, current.y - 1));
 
 		return list;
