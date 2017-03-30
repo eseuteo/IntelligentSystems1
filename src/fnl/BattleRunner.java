@@ -1,95 +1,135 @@
 package fnl;
 
-import robocode.control.*;
-import robocode.control.events.*;
-import java.util.concurrent.ThreadLocalRandom;
+import robocode.HitRobotEvent;
+import robocode.Robot;
+import robocode.ScannedRobotEvent;
+import java.util.ArrayList;
+import java.util.Random;
 
-//
-// Application that demonstrates how to run two sample robots in Robocode using the
-// RobocodeEngine from the robocode.control package.
-//
-// @author Flemming N. Larsen
-//
-public class BattleRunner {
-
-	public static void main(String[] args) {
-		// Disable log messages from Robocode
-		RobocodeEngine.setLogMessagesEnabled(false);
-		// Create the RobocodeEngine
-		// RobocodeEngine engine = new RobocodeEngine(); // Run from current
-		// working directory
-		RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode")); // Run
-																						// from
-																						// C:/Robocode
-
-		// Add our own battle listener to the RobocodeEngine
-		engine.addBattleListener(new BattleObserver());
-
-		// Show the Robocode battle view
-		engine.setVisible(true);
-
-		// Setup the battle specification
-		long inactivityTime = 10000000;
-		double gunCoolingRate = 1.0;
-		int sentryBorderSize = 50;
-		boolean hideEnemyNames = false;
-		int numRounds = 5;
-		BattlefieldSpecification battlefield = new BattlefieldSpecification(1280, 640); // 800x600
-		RobotSpecification[] selectedRobots = new RobotSpecification[2];
-		RobotSetup[] initialSetups = new RobotSetup[2];
-		RobotSpecification[] modelsRobot = new RobotSpecification[2];
-	
-		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
-		selectedRobots[0] = modelsRobot[0];
-		selectedRobots[1] = modelsRobot[1];
-		initialSetups[0] = new RobotSetup(32.0, 32.0, 0.0);
-		initialSetups[1] = new RobotSetup(416.0, 416.0, 0.0);
-		/*
-		for (int i = 1; i < 21; i++) {
-			selectedRobots[i] = modelsRobot[1];
-			double randX = ThreadLocalRandom.current().nextInt(0, 1200 + 1);
-			double randY = ThreadLocalRandom.current().nextInt(0, 800 + 1);
-			initialSetups[i] = new RobotSetup(randX, randY, 45.0);
-		}*/
-
-		BattleSpecification battleSpec = new BattleSpecification(battlefield, numRounds, inactivityTime, gunCoolingRate,
-				sentryBorderSize, hideEnemyNames, selectedRobots, initialSetups);
-
-		// Run our specified battle and let it run till it is over
-		engine.runBattle(battleSpec, true); // waits till the battle finishes
-
-		// Cleanup our RobocodeEngine
-		engine.close();
-
-		// Make sure that the Java VM is shut down properly
-		System.exit(0);
+public class RouteBot extends Robot {
+	protected enum direction{
+		NORTH, EAST, SOUTH, WEST;
 	}
-}
+	private ArrayList<direction> route = new ArrayList<direction>();
+	static int MAP_SIZE = 13;
+	int i = 0;
+	boolean scanned=false;
 
-//
-// Our private battle listener for handling the battle event we are interested
-// in.
-//
-class BattleObserver extends BattleAdaptor {
+	public void run() {
+		boolean[][] map=new boolean[MAP_SIZE][MAP_SIZE];
+		for(int k=0;k<MAP_SIZE;k++){
+			for(int j=0;j<MAP_SIZE;j++){
+				map[k][j]=true;
+			}
+		}
+		//route=Astar(getX(), getY(), goalX, goalY, map);
+		//la idea es guardar en map qu� baldosas est�n ocupadas seg�n se van generando las posiciones aleatorias
+		//y calcular la ruta antes de empezar a mover el robot
+		Random rand = new Random(getHeading());
+		for (int j = 1; j < 51; j++) {
 
-	// Called when the battle is completed successfully with battle results
-	public void onBattleCompleted(BattleCompletedEvent e) {
-		System.out.println("-- Battle has completed --");
-
-		// Print out the sorted results with the robot names
-		System.out.println("Battle results:");
-		for (robocode.BattleResults result : e.getSortedResults()) {
-			System.out.println("  " + result.getTeamLeaderName() + ": " + result.getScore());
+			int x = rand.nextInt();
+			x = Math.abs(x);
+			int y = (x/MAP_SIZE)%MAP_SIZE;
+			x%=MAP_SIZE;
+			boolean done = false;
+			while (!done) {
+				if(!map[x][y]){
+					 x = rand.nextInt();
+					 x = Math.abs(x);
+					 y = (x/MAP_SIZE)%MAP_SIZE;
+					 x%=MAP_SIZE;
+				}else{
+					done=true;
+					map[x][y]=false;
+				}
+			}
+		}
+		route.add(direction.NORTH);
+		route.add(direction.EAST);
+		route.add(direction.SOUTH);
+		route.add(direction.WEST);
+		while (true) {
+			do{
+				scanned=false;
+				moveTowards(route.get(i%route.size()));
+				scan();
+			}while(scanned);
+			ahead(64);
+			i++;
 		}
 	}
 
-	// Called when the game sends out an information message during the battle
-	public void onBattleMessage(BattleMessageEvent e) {
-		System.out.println("Msg> " + e.getMessage());
+	public void moveTowards(direction d) {
+		double ang;
+		switch(d){
+			case NORTH:
+				ang=0-getHeading();
+				break;
+			case EAST:
+				ang=90-getHeading();
+				break;
+			case SOUTH:
+				ang=180-getHeading();
+				break;
+			default:
+				ang=-90-getHeading();
+				break;
+		}
+		if (ang > 180.0) {
+			ang = ang - 360.0;
+		} else if (ang < -180.0) {
+			ang = ang + 360.0;
+		}
+		turnRight(ang);
 	}
 
-	// Called when the game sends out an error message during the battle
-	public void onBattleError(BattleErrorEvent e) {
-		System.out.println("Err> " + e.getError());
+	protected static int Manhattan(int orX, int orY, int destX, int destY){
+		return Math.abs(destX-orX)+Math.abs(destY-orY);
 	}
+	/*
+	@Override
+	public void onScannedRobot(ScannedRobotEvent event) {
+		if (event.getDistance() <= 64 &&!scanned) {
+			scanned=true;
+			changeDir();
+		}
+	}
+	public void changeDir(){
+		direction d;
+		switch(route.get(i%route.size())){
+		case NORTH:
+			d=direction.EAST;
+			break;
+		case EAST:
+			d=direction.SOUTH;
+			break;
+		case SOUTH:
+			d=direction.WEST;
+			break;
+		default:
+			d=direction.NORTH;
+			break;
+		}
+
+		route.set(i%route.size(), d);
+	}
+
+	public double trigonometry(double DestX, double DestY) {
+		double x = DestX - getX();
+		double y = DestY - getY();
+		double ang = Math.toDegrees(Math.atan(x / y));
+		if (y < 0) {
+			ang = ang + 180.0;
+		}
+		return ang;
+	}
+
+
+
+	public void onHitRobot(HitRobotEvent event) {
+		turnRight(event.getBearing());
+		back(48);
+	}
+*/
 }
