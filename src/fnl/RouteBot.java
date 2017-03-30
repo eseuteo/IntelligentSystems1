@@ -1,8 +1,7 @@
 package fnl;
 
-import robocode.HitRobotEvent;
+
 import robocode.Robot;
-import robocode.ScannedRobotEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -86,44 +85,4 @@ public class RouteBot extends Robot {
 	protected static int Manhattan(int orX, int orY, int destX, int destY){
 		return Math.abs(destX-orX)+Math.abs(destY-orY);
 	}
-	/*
-	@Override
-	public void onScannedRobot(ScannedRobotEvent event) {
-		if (event.getDistance() <= 64 &&!scanned) {
-			scanned=true;
-			changeDir();
-		}
-	}
-	public void changeDir(){
-		direction d;
-		switch(route.get(i%route.size())){
-		case NORTH:
-			d=direction.EAST;
-			break;
-		case EAST:
-			d=direction.SOUTH;
-			break;
-		case SOUTH:
-			d=direction.WEST;
-			break;
-		default:
-			d=direction.NORTH;
-			break;
-		}
-		route.set(i%route.size(), d);
-	}
-	public double trigonometry(double DestX, double DestY) {
-		double x = DestX - getX();
-		double y = DestY - getY();
-		double ang = Math.toDegrees(Math.atan(x / y));
-		if (y < 0) {
-			ang = ang + 180.0;
-		}
-		return ang;
-	}
-	public void onHitRobot(HitRobotEvent event) {
-		turnRight(event.getBearing());
-		back(48);
-	}
-*/
 }
