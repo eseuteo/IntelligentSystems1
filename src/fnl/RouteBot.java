@@ -20,7 +20,7 @@ public class RouteBot extends Robot {
 		int x=(int)getX()/64;
 		int y=(int)getY()/64;
 		map[x][y]=true;
-		map = MapGenerator.gen(MAP_SIZE, 31, 68);
+		map = MapGenerator.gen(MAP_SIZE, 31);
 		x=(int)getX()/64;
 		y=(int)getY()/64;
 		map[x][y]=false;

@@ -3,8 +3,8 @@ package fnl;
 import java.util.Random;
 
 public class MapGenerator {
-	public static boolean[][] gen(int size, int numBots, int seed){
-		Random rand = new Random(seed);
+	public static boolean[][] gen(int size, int numBots){
+		Random rand = new Random(250);
 		boolean[][] map = new boolean[size][size];
 		int x, y;
 		

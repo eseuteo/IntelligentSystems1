@@ -1,7 +1,8 @@
+
 import robocode.control.*;
 import robocode.control.events.*;
 
-import java.util.Random;
+import fnl.MapGenerator;
 
 //
 // Application that demonstrates how to run two sample robots in Robocode using the
@@ -11,6 +12,7 @@ import java.util.Random;
 //
 public class BattleRunner {
 	static int MAP_SIZE = 13;
+	static int NUM_ROBOTS = 31;
 
 	public static void main(String[] args) {
 		// Disable log messages from Robocode
@@ -18,9 +20,7 @@ public class BattleRunner {
 		// Create the RobocodeEngine
 		// RobocodeEngine engine = new RobocodeEngine(); // Run from current
 		// working directory
-		RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode")); // Run
-																						// from
-																						// C:/Robocode
+		RobocodeEngine engine = new RobocodeEngine(new java.io.File("C:/Robocode"));
 
 		// Add our own battle listener to the RobocodeEngine
 		engine.addBattleListener(new BattleObserver());
@@ -34,42 +34,53 @@ public class BattleRunner {
 		int sentryBorderSize = 50;
 		boolean hideEnemyNames = false;
 		int numRounds = 5;
-		BattlefieldSpecification battlefield = new BattlefieldSpecification(832, 832); // 800x600
-		RobotSpecification[] selectedRobots = new RobotSpecification[31];
-		RobotSetup[] initialSetups = new RobotSetup[31];
+		BattlefieldSpecification battlefield = new BattlefieldSpecification(832, 832); // MapSize
+		RobotSpecification[] selectedRobots = new RobotSpecification[NUM_ROBOTS];
+		RobotSetup[] initialSetups = new RobotSetup[NUM_ROBOTS];
 		RobotSpecification[] modelsRobot = new RobotSpecification[2];
 		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
+		long seed = 51;
 		selectedRobots[0] = modelsRobot[0];
-		long seed=System.currentTimeMillis()%360;
-		initialSetups[0] = new RobotSetup(32.0, 32.0, (double)seed);
+		initialSetups[0] = new RobotSetup(32.0, 32.0, (double) seed);
 		boolean[][] map = new boolean[MAP_SIZE][MAP_SIZE];
-		map[0][0]=true;
+		int k = 1; // It increases with each robot placed;
 
-		Random rand = new Random(seed);
-		for (int i = 1; i < 31; i++) {
+		map = MapGenerator.gen(MAP_SIZE, NUM_ROBOTS);
 
-			int x = rand.nextInt();
-			x = Math.abs(x);
-			int y = (x/MAP_SIZE)%MAP_SIZE;
-			x%=MAP_SIZE;
-			boolean done = false;
-			while (!done) {
-				if(map[x][y]||(x==MAP_SIZE-1&&y==x)){
-					 x = rand.nextInt();
-					 x = Math.abs(x);
-					 y = (x/MAP_SIZE)%MAP_SIZE;
-					 x%=MAP_SIZE;
-				}else{
-					map[x][y]=true;
-					done=true;
-					selectedRobots[i] = modelsRobot[1];
-					initialSetups[i] = new RobotSetup((double)x * 64 + 32, (double)y * 64 + 32, 0.0);
+		for (int i = 0; i < MAP_SIZE; i++) {
+			for (int j = 0; j < MAP_SIZE; j++) {
+				if (map[i][j]) {
+					selectedRobots[k] = modelsRobot[1];
+					initialSetups[k] = new RobotSetup((double) i * 64 + 32, (double) j * 64 + 32, 0.0);
+					k++;
 				}
-
 			}
-			
-
 		}
+		// Random rand = new Random(seed);
+		// for (int i = 1; i < NUM_ROBOTS; i++) {
+		//
+		// int x = rand.nextInt();
+		// x = Math.abs(x);
+		// int y = (x/MAP_SIZE)%MAP_SIZE;
+		// x%=MAP_SIZE;
+		// boolean done = false;
+		// while (!done) {
+		// if(map[x][y]){
+		// x = rand.nextInt();
+		// x = Math.abs(x);
+		// y = (x/MAP_SIZE)%MAP_SIZE;
+		// x%=MAP_SIZE;
+		// }else{
+		// map[x][y]=true;
+		// done=true;
+		// selectedRobots[i] = modelsRobot[1];
+		// initialSetups[i] = new RobotSetup((double)x * 64 + 32, (double)y * 64
+		// + 32, 0.0);
+		// }
+		//
+		// }
+		//
+		// }
 
 		BattleSpecification battleSpec = new BattleSpecification(battlefield, numRounds, inactivityTime, gunCoolingRate,
 				sentryBorderSize, hideEnemyNames, selectedRobots, initialSetups);
