@@ -2,7 +2,6 @@ import robocode.control.*;
 import robocode.control.events.*;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 //
 // Application that demonstrates how to run two sample robots in Robocode using the
@@ -36,18 +35,18 @@ public class BattleRunner {
 		boolean hideEnemyNames = false;
 		int numRounds = 5;
 		BattlefieldSpecification battlefield = new BattlefieldSpecification(832, 832); // 800x600
-		RobotSpecification[] selectedRobots = new RobotSpecification[51];
-		RobotSetup[] initialSetups = new RobotSetup[51];
+		RobotSpecification[] selectedRobots = new RobotSpecification[31];
+		RobotSetup[] initialSetups = new RobotSetup[31];
 		RobotSpecification[] modelsRobot = new RobotSpecification[2];
 		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
-		long int seed=Syste.currentTimeMillis();
 		selectedRobots[0] = modelsRobot[0];
-		initialSetups[0] = new RobotSetup(96.0, 352.0, (double)seed);
+		long seed=System.currentTimeMillis()%360;
+		initialSetups[0] = new RobotSetup(32.0, 32.0, (double)seed);
 		boolean[][] map = new boolean[MAP_SIZE][MAP_SIZE];
-
+		map[0][0]=true;
 
 		Random rand = new Random(seed);
-		for (int i = 1; i < 51; i++) {
+		for (int i = 1; i < 31; i++) {
 
 			int x = rand.nextInt();
 			x = Math.abs(x);
@@ -55,7 +54,7 @@ public class BattleRunner {
 			x%=MAP_SIZE;
 			boolean done = false;
 			while (!done) {
-				if(map[x][y]){
+				if(map[x][y]||(x==MAP_SIZE-1&&y==x)){
 					 x = rand.nextInt();
 					 x = Math.abs(x);
 					 y = (x/MAP_SIZE)%MAP_SIZE;
@@ -68,32 +67,10 @@ public class BattleRunner {
 				}
 
 			}
+			
 
 		}
 
-/*		for (int i=0; i<MAP_SIZE; i++){
-			for(int j=0; j<MAP_SIZE; j++){
-				aux = Math.abs(rand.nextInt())%1000;
-				System.out.println(Math.abs(aux));
-				condition = aux < 70;
-				if (condition && robotCounter < 21){
-					map[i][j] = true;
-					selectedRobots[robotCounter] = modelsRobot[1];
-					initialSetups[robotCounter] = new RobotSetup((double)i * 64 + 32, (double)j * 64 + 32, 0.0);
-					robotCounter++;
-				}
-			}
-		}
-
-
-*/
-/*		for (int i = 1; i < 21; i++) {
-			selectedRobots[i] = modelsRobot[1];
-			double randX = ThreadLocalRandom.current().nextInt(1, 25);
-			double randY = ThreadLocalRandom.current().nextInt(1, 25);
-			initialSetups[i] = new RobotSetup(randX * 32, randY * 32, 0.0);
-		}
-*/
 		BattleSpecification battleSpec = new BattleSpecification(battlefield, numRounds, inactivityTime, gunCoolingRate,
 				sentryBorderSize, hideEnemyNames, selectedRobots, initialSetups);
 
