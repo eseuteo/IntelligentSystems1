@@ -1,5 +1,5 @@
 package fnl;
 
-public enum direction{
+public enum direction {
 		NORTH, EAST, SOUTH, WEST;
-	}
+}
