@@ -7,6 +7,7 @@ public class MapGenerator {
 		Random rand = new Random(250);
 		boolean[][] map = new boolean[size][size];
 		int x, y;
+		map[size-1][size-1] = true;
 		
 		for (int j = 1; j < numBots; j++) {
 			x = rand.nextInt();
@@ -26,6 +27,8 @@ public class MapGenerator {
 				}
 			}
 		}
+		
+		map[size-1][size-1] = false;
 		
 		return map;
 	}
