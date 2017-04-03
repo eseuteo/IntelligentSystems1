@@ -3,7 +3,7 @@ package fnl;
 import java.util.ArrayList;
 
 public class routeGen {
-	public static void createRoute(ArrayList<direction> route, boolean[][] map){
+	public static void createRoute(ArrayList<Direction> route, boolean[][] map){
 		Position init = new Position(0,0);
 		Position end = new Position(12,12);
 		Astar astar = new Astar(13, init, end, map);

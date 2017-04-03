@@ -1,7 +1,7 @@
 package fnl;
 
-
 public class Position {
+	private int x, y;
 
 	public int getX() {
 		return x;
@@ -19,8 +19,6 @@ public class Position {
 		this.y = y;
 	}
 
-	int x, y;
-
 	public Position(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -28,8 +26,7 @@ public class Position {
 
 	@Override
 	public int hashCode() {
-
-		return y *13+ x;
+		return y * 13 + x;
 	}
 
 	@Override
