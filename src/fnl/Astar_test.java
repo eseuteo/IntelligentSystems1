@@ -1,9 +1,9 @@
+package fnl;
 import java.util.ArrayList;
 import java.util.Random;
 
 import fnl.Astar;
 import fnl.Position;
-import fnl.direction;
 
 public class Astar_test {
 
@@ -13,9 +13,9 @@ public class Astar_test {
 		boolean[][] map = mapGenerator(ini,13, 20); 
 		Astar search = new Astar(13,ini, end, map);
 		printMap(map);
-		ArrayList<direction> lst = search.run();
+		ArrayList<Direction> lst = search.run();
 		if(lst!=null){
-			for(direction d : lst ){
+			for(Direction d : lst ){
 				System.out.print(d.name()+", " );
 			}
 			System.out.println("\nsize: "+lst.size());

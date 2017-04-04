@@ -28,14 +28,12 @@ public class BattleRunner {
 		modelsRobot = engine.getLocalRepository("fnl.RouteBot*,sample.SittingDuck");
 		selectedRobots[0] = modelsRobot[0];
 		initialSetups[0] = new RobotSetup(INIT_X, INIT_Y, 0.0);
-		boolean[][] map = new boolean[MAP_SIZE][MAP_SIZE];
+		boolean[][] map= MapGenerator.gen(MAP_SIZE, NUM_ROBOTS);
 		int k = 1;
-
-		map = MapGenerator.gen(MAP_SIZE, NUM_ROBOTS);
 
 		for (int i = 0; i < MAP_SIZE; i++) {
 			for (int j = 0; j < MAP_SIZE; j++) {
-				if (map[i][j]) {
+				if (map[i][j]&&!(i==0&&j==0)) {
 					selectedRobots[k] = modelsRobot[1];
 					initialSetups[k] = new RobotSetup((double) i * 64 + 32, (double) j * 64 + 32, 0.0);
 					k++;

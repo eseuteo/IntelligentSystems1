@@ -30,15 +30,15 @@ public class Asearch {
 		open.add(ini);
 		parent = new HashMap<Position, Position>();
 		f = new int[maxCells][maxCells];
-		f[ini.x][ini.y] = heuristic(ini);
+		f[ini.getX()][ini.getY()] = heuristic(ini);
 		g = new int[maxCells][maxCells];
-		g[ini.x][ini.y] = 0;
+		g[ini.getX()][ini.getY()] = 0;
 
 	}
 
 	
 
-	public ArrayList<direction> run() {
+	public ArrayList<Direction> run() {
 		while (!open.isEmpty()) {
 			 this.current = min();
 			if (current.equals(this.end)) {
@@ -49,11 +49,11 @@ public class Asearch {
 			for (Position neighbor : neighbor(current)) {
 				if (closed.contains(neighbor))
 					continue;
-				int tent = g[current.x][current.y] + 1;
-				if (!open.contains(neighbor) || tent < g[neighbor.x][neighbor.y]) {
+				int tent = g[current.getX()][current.getY()] + 1;
+				if (!open.contains(neighbor) || tent < g[neighbor.getX()][neighbor.getY()]) {
 					parent.put(neighbor, current);
-					g[neighbor.x][neighbor.y] = tent;
-					f[neighbor.x][neighbor.y] = tent + heuristic(neighbor);
+					g[neighbor.getX()][neighbor.getY()] = tent;
+					f[neighbor.getX()][neighbor.getY()] = tent + heuristic(neighbor);
 					if (!open.contains(neighbor)) {
 						open.add(neighbor);
 					}
@@ -66,23 +66,23 @@ public class Asearch {
 
 	private ArrayList<Position> neighbor(Position current) {
 		ArrayList<Position> list = new ArrayList<Position>(4);
-		if (current.x != maxCells-1 && !map[current.x + 1][current.y]) list.add(new Position(current.x + 1, current.y));
-		if (current.x != 0 && !map[current.x - 1][current.y]) list.add(new Position(current.x - 1, current.y));
-		if (current.y != maxCells-1 && !map[current.x][current.y + 1]) list.add(new Position(current.x, current.y + 1));
-		if (current.y != 0 && !map[current.x][current.y - 1]) list.add(new Position(current.x, current.y - 1));
+		if (current.getX() != maxCells-1 && !map[current.getX() + 1][current.getY()]) list.add(new Position(current.getX() + 1, current.getY()));
+		if (current.getX() != 0 && !map[current.getX() - 1][current.getY()]) list.add(new Position(current.getX() - 1, current.getY()));
+		if (current.getY() != maxCells-1 && !map[current.getX()][current.getY() + 1]) list.add(new Position(current.getX(), current.getY() + 1));
+		if (current.getY() != 0 && !map[current.getX()][current.getY() - 1]) list.add(new Position(current.getX(), current.getY() - 1));
 
 		return list;
 	}
 	/**
 	 * Reconstruct path from ini to end. Using HashMap parent in which parent.get(x,y) is the predecessor of every expanded position.
 	 * @param current - final position
-	 * @return res = list of directions that should be followed by the robot
+	 * @return res = list of Directions that should be followed by the robot
 	 */
-	public ArrayList<direction> constructPath(Position current) {
+	public ArrayList<Direction> constructPath(Position current) {
 		ArrayList<Position> p = new ArrayList<Position>();
-		ArrayList<direction> res = new ArrayList<>();
+		ArrayList<Direction> res = new ArrayList<>();
 		Position i = this.end;
-		while(g[i.x][i.y]>0){
+		while(g[i.getX()][i.getY()]>0){
 			p.add(i);
 			i = parent.get(i);
 		}
@@ -90,19 +90,19 @@ public class Asearch {
 		
 		
 		for (int j = p.size()-1; j > 0; j--) {
-			int x = p.get(j).x - p.get(j-1).x;
-			int y = p.get(j).y - p.get(j-1).y;
+			int x = p.get(j).getX() - p.get(j-1).getX();
+			int y = p.get(j).getY() - p.get(j-1).getY();
 			if(x==0){
 				if(y==1){
-					res.add(direction.SOUTH);
+					res.add(Direction.SOUTH);
 				}else{
-					res.add(direction.NORTH);
+					res.add(Direction.NORTH);
 				}
 			}else{
 				if(x==1){
-					res.add(direction.WEST);
+					res.add(Direction.WEST);
 				}else{
-					res.add(direction.EAST);
+					res.add(Direction.EAST);
 				}
 			}
 			
@@ -111,7 +111,7 @@ public class Asearch {
 	}
 
 	public int heuristic(Position actual) {
-		return Math.abs(end.x - actual.x) + Math.abs(end.y - actual.y);
+		return Math.abs(end.getX() - actual.getX()) + Math.abs(end.getY() - actual.getY());
 	}
 
 	private Position min() {
@@ -119,9 +119,9 @@ public class Asearch {
 		Position min = null;
 		int val = Integer.MAX_VALUE;
 		for (Position i : this.open) {
-			if (f[i.x][i.y] < val) {
+			if (f[i.getX()][i.getY()] < val) {
 				min = i;
-				val = f[i.x][i.y];
+				val = f[i.getX()][i.getY()];
 			}
 		}
 
@@ -134,11 +134,11 @@ public class Asearch {
 		for (int j = map.length-1; j >=0 ; j--) {
 			for (int i = 0; i < map.length; i++) {
 				if(!map[i][j]) {
-				if(current.x==i&&current.y==j){
+				if(current.getX()==i&&current.getY()==j){
 					 st.append("^");
-				}else if(end.x==i&&end.y==j){
+				}else if(end.getX()==i&&end.getY()==j){
 					 st.append("X");
-				}else if(ini.x==i&&ini.y==j){
+				}else if(ini.getX()==i&&ini.getY()==j){
 					 st.append("O");
 				}else{
 					 st.append("_");

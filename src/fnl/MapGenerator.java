@@ -10,11 +10,11 @@ public class MapGenerator {
 	 * 
 	 * */
 	public static boolean[][] gen(int size, int numBots) {
-		Random rand = new Random(53741860);
+		Random rand = new Random(351);
 		boolean[][] map = new boolean[size][size];
 		int x, y;
 		map[size - 1][size - 1] = true;
-
+		map[0][0] = true;
 		for (int j = 1; j < numBots; j++) {
 			boolean done = false;
 			while (!done) {

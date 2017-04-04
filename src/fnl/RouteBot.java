@@ -13,12 +13,7 @@ public class RouteBot extends Robot {
 	boolean scanned = false;
 
 	public void run() {
-		boolean[][] map = new boolean[MAP_SIZE][MAP_SIZE];
-		int x = (int) getX() / 64;
-		int y = (int) getY() / 64;
-		switchInitPos(x, y, map);
-		map = MapGenerator.gen(MAP_SIZE, NUM_ROBOTS);
-		switchInitPos(x, y, map);
+		boolean[][] map = MapGenerator.gen(MAP_SIZE, NUM_ROBOTS);
 		Astar astar = new Astar(MAP_SIZE, new Position(0, 0), new Position(GOAL_POS_X, GOAL_POS_Y), map);
 		route = astar.run();
 		while (i < route.size()) {
@@ -28,14 +23,6 @@ public class RouteBot extends Robot {
 		}
 	}
 	
-	/**
-	 * 
-	 * Changes the value for a given position of a boolean matrix. So, the MapGenerator.gen() function does not take it into account
-	 * 
-	 * */
-	private void switchInitPos(int x, int y, boolean[][] map){
-		map[x][y] = !map[x][y];
-	}
 
 	/**
 	 * 
